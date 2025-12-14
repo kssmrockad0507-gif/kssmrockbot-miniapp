@@ -1,57 +1,55 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>KSSM Rock Rewards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KSSM Rock Rewards</title>
   <style>
     body{
+      margin:0;
       font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      text-align:center;
+      background: linear-gradient(180deg,#0e5d63,#07404b);
+      color:#fff;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .box{
+      background:#fff;
+      color:#000;
       padding:30px;
+      border-radius:16px;
+      width:90%;
+      max-width:400px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.25);
     }
-    .card{
-      background:#1e293b;
-      border-radius:12px;
-      padding:20px;
-      max-width:350px;
-      margin:auto;
-      box-shadow:0 0 15px rgba(0,0,0,0.4);
+    h1{
+      margin-top:0;
+      color:#0e5d63;
     }
-    button{
-      margin-top:15px;
-      padding:12px 20px;
-      border:none;
-      border-radius:8px;
-      background:#22c55e;
-      color:black;
-      font-size:16px;
+    .task-btn{
+      margin-top:20px;
+      display:block;
+      text-decoration:none;
+      background:#0e5d63;
+      color:#fff;
+      padding:16px;
+      border-radius:14px;
+      font-size:18px;
       font-weight:bold;
-      cursor:pointer;
     }
   </style>
 </head>
 <body>
+  <div class="box">
+    <h1>KSSM Rock</h1>
+    <p>Simple task page for friends & surrounding people</p>
 
-  <div class="card">
-    <h2>🎁 KSSM Rock Rewards</h2>
-    <p>Watch ads / wait timer<br>Earn coins</p>
-    <button onclick="startTask()">START TASK</button>
-    <p id="status"></p>
+    <!-- ONLY ONE OPTION -->
+    <a class="task-btn" href="task.html">▶️ Tasks</a>
   </div>
-
-  <script>
-    function startTask(){
-      document.getElementById("status").innerText =
-        "⏳ Please wait... (Demo task)";
-      setTimeout(()=>{
-        document.getElementById("status").innerText =
-          "✅ Task completed! Coins added (demo)";
-      }, 5000);
-    }
-  </script>
-
 </body>
 </html>
