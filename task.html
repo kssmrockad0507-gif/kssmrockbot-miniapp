@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Daily Task</title>
 
-  <!-- MONETAG AD SDK -->
-  <script src='//libtl.com/sdk.js'
-          data-zone='10324603'
-          data-sdk='show_10324603'></script>
+  <!-- MONETAG SDK -->
+  <script src="//libtl.com/sdk.js"
+          data-zone="10324603"
+          data-sdk="show_10324603"></script>
 
   <style>
     body{
@@ -46,6 +46,10 @@
       font-size:14px;
       color:#444;
     }
+    .disabled{
+      background:#aaa;
+      cursor:not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -55,9 +59,8 @@
 
   <p><b>10 + 5 = ?</b></p>
 
-  <!-- OPTIONS -->
   <div class="opt" onclick="wrong()">12</div>
-  <div class="opt" onclick="correct()">15</div>
+  <div class="opt" id="correctBtn" onclick="correct()">15</div>
 
   <div class="count" id="count">0 / 50 completed</div>
 </div>
@@ -67,9 +70,14 @@
   const MAX = 50;
 
   const countEl = document.getElementById("count");
+  const correctBtn = document.getElementById("correctBtn");
 
   function update(){
     countEl.innerText = done + " / " + MAX + " completed";
+    if(done >= MAX){
+      correctBtn.classList.add("disabled");
+      correctBtn.innerText = "Daily limit reached";
+    }
   }
 
   function wrong(){
@@ -77,22 +85,23 @@
   }
 
   function correct(){
-    if(done >= MAX){
-      alert("Daily limit reached");
-      return;
-    }
+    if(done >= MAX) return;
 
-    // SHOW AD
-    if (typeof show_10324603 === "function") {
-      show_10324603();
-    }
-
-    done++;
-    localStorage.setItem("taskDone", done);
-    update();
+    // REWARDED POPUP (CORRECT METHOD)
+    show_10324603('pop')
+      .then(() => {
+        // ad watched / closed successfully
+        done++;
+        localStorage.setItem("taskDone", done);
+        update();
+      })
+      .catch(e => {
+        // ad failed / no fill
+        alert("Ad not available now, try later");
+      });
   }
 
-  // daily reset
+  // Daily reset
   const today = new Date().toDateString();
   if(localStorage.getItem("taskDate") !== today){
     localStorage.setItem("taskDate", today);
