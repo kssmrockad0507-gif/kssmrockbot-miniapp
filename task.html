@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily Tasks</title>
+  <style>
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg,#0e5d63,#07404b);
+      color:#fff;
+    }
+    .container{
+      max-width:480px;
+      margin:0 auto;
+      padding:16px;
+    }
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+    }
+    .card{
+      background:#fff;
+      color:#000;
+      border-radius:16px;
+      padding:16px;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    }
+    .task-btn{
+      margin-top:14px;
+      background:#0e5d63;
+      color:#fff;
+      padding:14px;
+      border-radius:12px;
+      font-size:17px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .disabled{
+      background:#aaa;
+      cursor:not-allowed;
+    }
+    #overlay{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      color:#fff;
+      z-index:9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      font-size:20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top">
+    <div>Daily Tasks</div>
+    <div id="count">0 / 50</div>
+  </div>
+
+  <div class="card">
+    <p>Task: Watch Ad</p>
+    <div id="taskBtn" class="task-btn">▶️ Start Task</div>
+    <p style="font-size:13px;color:#555;margin-top:10px;">
+      (Ad plays → close → next task)
+    </p>
+  </div>
+</div>
+
+<!-- Fake Ad Overlay (replace later with real ad script) -->
+<div id="overlay">
+  <div>Ad Playing…</div>
+  <div id="sec">10</div>
+</div>
+
+<script>
+  let completed = Number(localStorage.getItem("dailyTasks") || 0);
+  const MAX = 50;
+
+  const countEl = document.getElementById("count");
+  const btn = document.getElementById("taskBtn");
+  const overlay = document.getElementById("overlay");
+  const secEl = document.getElementById("sec");
+
+  function updateUI(){
+    countEl.innerText = completed + " / " + MAX;
+    if(completed >= MAX){
+      btn.innerText = "Daily limit reached";
+      btn.classList.add("disabled");
+    }
+  }
+
+  btn.onclick = ()=>{
+    if(completed >= MAX) return;
+
+    // simulate ad
+    overlay.style.display = "flex";
+    let sec = 10;
+    secEl.innerText = sec;
+
+    const t = setInterval(()=>{
+      sec--;
+      secEl.innerText = sec;
+      if(sec <= 0){
+        clearInterval(t);
+        overlay.style.display = "none";
+        completed++;
+        localStorage.setItem("dailyTasks", completed);
+        updateUI();
+      }
+    },1000);
+  };
+
+  // reset daily automatically (simple version)
+  const today = new Date().toDateString();
+  if(localStorage.getItem("taskDate") !== today){
+    localStorage.setItem("taskDate", today);
+    localStorage.setItem("dailyTasks", 0);
+    completed = 0;
+  }
+
+  updateUI();
+</script>
+
+</body>
+</html>
