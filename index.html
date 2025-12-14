@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>KSSM Rock Rewards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#0f172a;
+      color:white;
+      text-align:center;
+      padding:30px;
+    }
+    .card{
+      background:#1e293b;
+      border-radius:12px;
+      padding:20px;
+      max-width:350px;
+      margin:auto;
+      box-shadow:0 0 15px rgba(0,0,0,0.4);
+    }
+    button{
+      margin-top:15px;
+      padding:12px 20px;
+      border:none;
+      border-radius:8px;
+      background:#22c55e;
+      color:black;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>🎁 KSSM Rock Rewards</h2>
+    <p>Watch ads / wait timer<br>Earn coins</p>
+    <button onclick="startTask()">START TASK</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function startTask(){
+      document.getElementById("status").innerText =
+        "⏳ Please wait... (Demo task)";
+      setTimeout(()=>{
+        document.getElementById("status").innerText =
+          "✅ Task completed! Coins added (demo)";
+      }, 5000);
+    }
+  </script>
+
+</body>
+</html>
