@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fun AI Jackpot Bot</title>
+<title>தமிழ் Fun Bot</title>
 
 <!-- MONETAG SDK -->
 <script src="//libtl.com/sdk.js"
@@ -14,149 +14,121 @@
 body{
   margin:0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(180deg,#6a11cb,#2575fc);
+  background: linear-gradient(180deg,#ff512f,#dd2476);
   min-height:100vh;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
 }
-.chat-box{
+.box{
   background:#fff;
   width:95%;
   max-width:420px;
   border-radius:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.3);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+  padding:16px;
 }
-.header{
-  background:#6a11cb;
-  color:#fff;
-  padding:14px;
+h2{
+  margin-top:0;
   text-align:center;
-  font-weight:bold;
+  color:#dd2476;
 }
-.messages{
-  flex:1;
-  padding:12px;
-  overflow-y:auto;
-}
-.msg{
-  margin-bottom:10px;
-  padding:10px 14px;
+.chat{
+  background:#f5f5f5;
   border-radius:14px;
-  max-width:80%;
-  font-size:14px;
+  padding:14px;
+  min-height:90px;
+  font-size:15px;
 }
-.bot{
-  background:#f1f1f1;
-  align-self:flex-start;
-}
-.user{
-  background:#2575fc;
-  color:#fff;
-  align-self:flex-end;
-}
-.footer{
+.buttons{
+  margin-top:12px;
   display:flex;
-  padding:10px;
-  gap:6px;
+  gap:8px;
 }
 button{
   flex:1;
-  padding:10px;
   border:none;
   border-radius:12px;
-  background:#6a11cb;
+  padding:12px;
+  background:#dd2476;
   color:#fff;
   font-weight:bold;
   cursor:pointer;
-}
-button.ad{
-  background:#ff9800;
 }
 </style>
 </head>
 
 <body>
 
-<div class="chat-box">
-  <div class="header">🤖 Fun AI Jackpot Bot</div>
+<div class="box">
+  <h2>🤖 தமிழ் Fun Bot</h2>
 
-  <div class="messages" id="messages"></div>
+  <div class="chat" id="chat">
+    🤔 ரெடி தானா?  
+    கீழே ஜோக் அல்லது ரிடில் தேர்வு பண்ணு!
+  </div>
 
-  <div class="footer">
-    <button onclick="askJoke()">😂 Joke</button>
-    <button onclick="askRiddle()">🧩 Riddle</button>
-    <button class="ad" onclick="watchAd()">➕ Fun Boost</button>
+  <div class="buttons">
+    <button onclick="joke()">😂 ஜோக்</button>
+    <button onclick="riddle()">🧩 ரிடில்</button>
+    <button onclick="answer()">✅ ஆன்சர்</button>
   </div>
 </div>
 
 <script>
-let count = Number(localStorage.getItem("chatCount") || 0);
-const MAX_FREE = 5;
-const messages = document.getElementById("messages");
+let count = Number(localStorage.getItem("useCount") || 0);
+let currentQ = null;
+let currentA = null;
 
 const jokes = [
-  ["Why did the math book cry?","Because it had too many problems 😄"],
-  ["Why don’t scientists trust atoms?","Because they make up everything 😂"],
-  ["Why was the computer cold?","It forgot to close its Windows 🤣"]
+  ["எந்த டீ எப்போதும் சிரிக்கும்?", "காமெடி 😂 டீ"],
+  ["எந்த மொபைல் பேசாது?", "சைலண்ட் மோட் 📵"],
+  ["எந்த மனிதன் எப்போதும் ஓடிக்கொண்டே இருப்பான்?", "கிளாக் மனிதன் ⏰"]
 ];
 
 const riddles = [
-  ["What has keys but can’t open locks?","A keyboard ⌨️"],
-  ["What has a head and tail but no body?","A coin 🪙"],
-  ["What comes once in a minute, twice in a moment?","The letter M 🤓"]
+  ["வாய் இருக்கு பேசாது, கால் இருக்கு நடக்காது. அது என்ன?", "நாற்காலி 🪑"],
+  ["பற்கள் இருக்கு கடிக்காது. அது என்ன?", "சீப்பு"],
+  ["கண்ணாடி இல்லாமே முகம் காட்டும். அது என்ன?", "நீரில் பிரதிபலிப்பு 💧"]
 ];
 
-function addMsg(text,type){
-  const div=document.createElement("div");
-  div.className="msg "+type;
-  div.innerText=text;
-  messages.appendChild(div);
-  messages.scrollTop=messages.scrollHeight;
-}
+const chat = document.getElementById("chat");
 
-function limitCheck(){
-  if(count>=MAX_FREE){
-    addMsg("Free fun limit reached 😅\nTap ➕ Fun Boost to continue!", "bot");
-    return false;
+function autoAdCheck(){
+  if(count>0 && count % 5 === 0){
+    show_10324603('pop').then(()=>{
+      chat.innerText = "👍 தொடரலாம்! இன்னொரு கேள்வி கேள்";
+    }).catch(()=>{});
   }
-  return true;
 }
 
-function askJoke(){
-  if(!limitCheck()) return;
+function joke(){
+  const j = jokes[Math.floor(Math.random()*jokes.length)];
+  currentQ = j[0];
+  currentA = j[1];
+  chat.innerText = "😂 ஜோக் கேள்வி:\n\n" + currentQ;
   count++;
-  localStorage.setItem("chatCount",count);
-  const j=jokes[Math.floor(Math.random()*jokes.length)];
-  addMsg("Tell me a joke","user");
-  addMsg(j[0]+"\n\n👉 "+j[1],"bot");
+  localStorage.setItem("useCount",count);
+  autoAdCheck();
 }
 
-function askRiddle(){
-  if(!limitCheck()) return;
+function riddle(){
+  const r = riddles[Math.floor(Math.random()*riddles.length)];
+  currentQ = r[0];
+  currentA = r[1];
+  chat.innerText = "🧩 ரிடில்:\n\n" + currentQ;
   count++;
-  localStorage.setItem("chatCount",count);
-  const r=riddles[Math.floor(Math.random()*riddles.length)];
-  addMsg("Give me a riddle","user");
-  addMsg(r[0]+"\n\n🧠 Answer: "+r[1],"bot");
+  localStorage.setItem("useCount",count);
+  autoAdCheck();
 }
 
-function watchAd(){
-  show_10324603('pop').then(()=>{
-    count=0;
-    localStorage.setItem("chatCount",0);
-    addMsg("Ad watched 👍","user");
-    addMsg("Fun unlocked! Ask again 😍","bot");
-  }).catch(()=>{
-    addMsg("Ad not available now 😕","bot");
-  });
+function answer(){
+  if(!currentA){
+    chat.innerText = "🤔 முதலில் ஒரு ஜோக் அல்லது ரிடில் தேர்வு பண்ணு";
+    return;
+  }
+  chat.innerText = "✅ பதில்:\n\n" + currentA;
 }
-
-// welcome
-addMsg("Hi 👋 I'm your Fun AI Bot!\nJokes, riddles & fun await 😄","bot");
 </script>
 
 </body>
