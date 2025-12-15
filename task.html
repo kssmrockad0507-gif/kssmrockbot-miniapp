@@ -1,115 +1,162 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Daily Task</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fun AI Jackpot Bot</title>
 
-  <!-- MONETAG SDK -->
-  <script src="//libtl.com/sdk.js"
-          data-zone="10324603"
-          data-sdk="show_10324603"></script>
+<!-- MONETAG SDK -->
+<script src="//libtl.com/sdk.js"
+        data-zone="10324603"
+        data-sdk="show_10324603"></script>
 
-  <style>
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg,#0e5d63,#07404b);
-      color:#fff;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .card{
-      background:#fff;
-      color:#000;
-      border-radius:16px;
-      padding:20px;
-      width:90%;
-      max-width:420px;
-      text-align:center;
-      box-shadow:0 8px 20px rgba(0,0,0,0.25);
-    }
-    h2{ color:#0e5d63; }
-    .opt{
-      margin-top:14px;
-      padding:14px;
-      background:#0e5d63;
-      color:#fff;
-      border-radius:12px;
-      font-size:18px;
-      cursor:pointer;
-    }
-    .count{
-      margin-top:12px;
-      font-size:14px;
-      color:#444;
-    }
-    .disabled{
-      background:#aaa;
-      cursor:not-allowed;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg,#6a11cb,#2575fc);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.chat-box{
+  background:#fff;
+  width:95%;
+  max-width:420px;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.header{
+  background:#6a11cb;
+  color:#fff;
+  padding:14px;
+  text-align:center;
+  font-weight:bold;
+}
+.messages{
+  flex:1;
+  padding:12px;
+  overflow-y:auto;
+}
+.msg{
+  margin-bottom:10px;
+  padding:10px 14px;
+  border-radius:14px;
+  max-width:80%;
+  font-size:14px;
+}
+.bot{
+  background:#f1f1f1;
+  align-self:flex-start;
+}
+.user{
+  background:#2575fc;
+  color:#fff;
+  align-self:flex-end;
+}
+.footer{
+  display:flex;
+  padding:10px;
+  gap:6px;
+}
+button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:#6a11cb;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.ad{
+  background:#ff9800;
+}
+</style>
 </head>
+
 <body>
 
-<div class="card">
-  <h2>Task Question</h2>
+<div class="chat-box">
+  <div class="header">🤖 Fun AI Jackpot Bot</div>
 
-  <p><b>10 + 5 = ?</b></p>
+  <div class="messages" id="messages"></div>
 
-  <div class="opt" onclick="wrong()">12</div>
-  <div class="opt" id="correctBtn" onclick="correct()">15</div>
-
-  <div class="count" id="count">0 / 50 completed</div>
+  <div class="footer">
+    <button onclick="askJoke()">😂 Joke</button>
+    <button onclick="askRiddle()">🧩 Riddle</button>
+    <button class="ad" onclick="watchAd()">➕ Fun Boost</button>
+  </div>
 </div>
 
 <script>
-  let done = Number(localStorage.getItem("taskDone") || 0);
-  const MAX = 50;
+let count = Number(localStorage.getItem("chatCount") || 0);
+const MAX_FREE = 5;
+const messages = document.getElementById("messages");
 
-  const countEl = document.getElementById("count");
-  const correctBtn = document.getElementById("correctBtn");
+const jokes = [
+  ["Why did the math book cry?","Because it had too many problems 😄"],
+  ["Why don’t scientists trust atoms?","Because they make up everything 😂"],
+  ["Why was the computer cold?","It forgot to close its Windows 🤣"]
+];
 
-  function update(){
-    countEl.innerText = done + " / " + MAX + " completed";
-    if(done >= MAX){
-      correctBtn.classList.add("disabled");
-      correctBtn.innerText = "Daily limit reached";
-    }
+const riddles = [
+  ["What has keys but can’t open locks?","A keyboard ⌨️"],
+  ["What has a head and tail but no body?","A coin 🪙"],
+  ["What comes once in a minute, twice in a moment?","The letter M 🤓"]
+];
+
+function addMsg(text,type){
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.innerText=text;
+  messages.appendChild(div);
+  messages.scrollTop=messages.scrollHeight;
+}
+
+function limitCheck(){
+  if(count>=MAX_FREE){
+    addMsg("Free fun limit reached 😅\nTap ➕ Fun Boost to continue!", "bot");
+    return false;
   }
+  return true;
+}
 
-  function wrong(){
-    alert("❌ Wrong answer");
-  }
+function askJoke(){
+  if(!limitCheck()) return;
+  count++;
+  localStorage.setItem("chatCount",count);
+  const j=jokes[Math.floor(Math.random()*jokes.length)];
+  addMsg("Tell me a joke","user");
+  addMsg(j[0]+"\n\n👉 "+j[1],"bot");
+}
 
-  function correct(){
-    if(done >= MAX) return;
+function askRiddle(){
+  if(!limitCheck()) return;
+  count++;
+  localStorage.setItem("chatCount",count);
+  const r=riddles[Math.floor(Math.random()*riddles.length)];
+  addMsg("Give me a riddle","user");
+  addMsg(r[0]+"\n\n🧠 Answer: "+r[1],"bot");
+}
 
-    // REWARDED POPUP (CORRECT METHOD)
-    show_10324603('pop')
-      .then(() => {
-        // ad watched / closed successfully
-        done++;
-        localStorage.setItem("taskDone", done);
-        update();
-      })
-      .catch(e => {
-        // ad failed / no fill
-        alert("Ad not available now, try later");
-      });
-  }
+function watchAd(){
+  show_10324603('pop').then(()=>{
+    count=0;
+    localStorage.setItem("chatCount",0);
+    addMsg("Ad watched 👍","user");
+    addMsg("Fun unlocked! Ask again 😍","bot");
+  }).catch(()=>{
+    addMsg("Ad not available now 😕","bot");
+  });
+}
 
-  // Daily reset
-  const today = new Date().toDateString();
-  if(localStorage.getItem("taskDate") !== today){
-    localStorage.setItem("taskDate", today);
-    localStorage.setItem("taskDone", 0);
-    done = 0;
-  }
-
-  update();
+// welcome
+addMsg("Hi 👋 I'm your Fun AI Bot!\nJokes, riddles & fun await 😄","bot");
 </script>
 
 </body>
